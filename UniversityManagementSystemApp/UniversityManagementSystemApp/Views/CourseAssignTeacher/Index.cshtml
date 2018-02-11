@@ -1,0 +1,269 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.Course
+
+@{
+    ViewBag.Title = "Course Assign to Teacher";
+   
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="background-color: #013252;">
+
+    <fieldset>
+        <legend>Course Assaign to Teacher</legend>
+        <form id="" method="POST">
+
+            <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title"> Course Assaign to Teacher </div>
+                <div style="text-align: center; font-size: 20px; color: Black;">
+                    @if (ViewBag.message != null)
+                    {
+                        @ViewBag.message
+                    }
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td><label for="DepartmentId">Department:</label></td>
+                    <td>
+                        <select id="DepartmentId" name="DepartmentId" class="form-control" required="required">
+                            <option value="">--Select Department--</option>
+
+                            @foreach (Department aDepartment in ViewBag.Departments)
+                            {
+                                <option value="@aDepartment.Id">@aDepartment.DeptCode</option>
+                            }
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+
+
+                <tr>
+                    <td><label for="TeacherId">Teacher:</label></td>
+                    <td>
+                        <select id="TeacherId" name="TeacherId" class="form-control" required="required">
+                            <option value="">--Select Teacher--</option>
+
+                        </select>
+                    </td>
+                    <td>
+                        @Html.ValidationMessage("Teacher")
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><label for="CreditToTaken">Credit To be Taken:</label></td>
+                    <td>
+                        <input type="text" id="CreditToTaken" name="CreditToTaken" readonly="readonly" class="form-control"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="RemainingCredit">Remaining Taken:</label></td>
+                    <td>
+                        <input type="text" id="RemainingCredit" name="RemainingCredit" readonly="readonly" class="form-control"/>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><label for="CourseId">Course:</label></td>
+                    <td>
+                        <select id="CourseId" name="CourseId" class="form-control" required="required">
+                            <option value="">--Select Course--</option>
+
+                        </select>
+                    </td>
+                    <td>
+                        @Html.ValidationMessage("CourseId")
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><label for="CourseName">Name:</label></td>
+                    <td>
+                        <input type="text" id="CourseName" name="CourseName" readonly="readonly" class="form-control"/>
+                    </td>
+                    <td>
+                        @Html.ValidationMessageFor(course => course.CourseName)
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><label for="Credit">Credit:</label></td>
+                    <td>
+                        <input type="text" id="Credit" name="Credit" readonly="readonly" class="form-control"/>
+                    </td>
+                    <td>
+                        @Html.ValidationMessageFor(course => course.Credit)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" id="submit" name="submit" value="Assign"/>
+                    </td>
+                </tr>
+            </table>
+            </div>
+        </form>
+    </fieldset>
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    @*@section scripts
+        {*@
+    <script>
+
+
+        $(document).ready(function () {
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+
+                $("#TeacherId").empty();
+
+                var json = {
+                    departmentId: deptId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllTeachersByDepartmentId", "CourseAssignTeacher")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $("#TeacherId").append('<option value="">--Select teacher--</option>');
+                        $.each(data, function (key, value) {
+                            $("#TeacherId").append('<option value=' + value.Id + '>' + value.TeacherName + '</option>');
+
+                        });
+
+                    }
+                });
+            });
+
+
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+
+                $("#CourseId").empty();
+
+                var json = {
+                    departmentId: deptId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllCoursesByDepartmentId", "CourseAssignTeacher")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $("#CourseId").append('<option value="">--Select Course--</option>');
+                        $.each(data, function (key, value) {
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.CourseCode + '</option>');
+
+                        });
+
+                    }
+                });
+            });
+
+            $("#TeacherId").change(function () {
+                var teachId = $("#TeacherId").val();
+                var json = {
+                    teacherId: teachId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCreditsByTeacherId", "CourseAssignTeacher")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $('input#CreditToTaken').val(data);
+                    }
+                });
+            });
+
+            $("#TeacherId").change(function () {
+                var teachId = $("#TeacherId").val();
+                var json = {
+                    teacherId: teachId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetRemainingCreditsByTeacherId", "CourseAssignTeacher")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $('input#RemainingCredit').val(data);
+                    }
+                });
+            });
+
+
+
+            $("#CourseId").change(function () {
+                var courseId = $("#CourseId").val();
+                var json = {
+                    courseId: courseId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDetailsByCourseId", "CourseAssignTeacher")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            $('input#CourseName').val(value.CourseName);
+                            $('input#Credit').val(value.Credit);
+                        });
+
+                    }
+                });
+            });
+
+            $("#submit").click(function () {
+                var remainingCredit = $("#RemainingCredit").val();
+                var credit = $("#Credit").val();
+
+                if (remainingCredit < credit) {
+                    alert("You dont have enough remaining credit to take new Course");
+                    return false;
+                }
+            });
+
+
+        });
+    </script>
+    @*}*@
+
+
+
+
+</body>
+
+</html>

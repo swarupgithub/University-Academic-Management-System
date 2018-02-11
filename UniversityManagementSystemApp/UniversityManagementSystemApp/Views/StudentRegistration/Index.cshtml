@@ -1,0 +1,144 @@
+﻿@using System.Web.UI.WebControls
+@using Microsoft.SqlServer.Server
+@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.StudentRegestration
+@{
+    ViewBag.Title = "Student Regestration";
+
+}
+
+<h2></h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color: #013252;">
+
+    <fieldset>
+        <legend>Student Registraion</legend>
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title"> Student Regestration </div>
+                        <div style="text-align: center; font-size: 20px; color: Black;">
+                            @if (ViewBag.message != null)
+                            {
+                                @ViewBag.message
+                            }
+                        </div>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>@Html.LabelFor(x => x.StudentName, "Student Name:")</td>
+                            <td>@Html.TextBoxFor(x => x.StudentName, new { @class = "form-control" })</td>
+                            <td>@Html.ValidationMessageFor(x => x.StudentName, "", new { @style = "color:red" })</td>
+                        </tr>
+
+                        <tr>
+                            <td>@Html.LabelFor(x => x.StudentEmail, "Student Email:")</td>
+                            <td>@Html.TextBoxFor(x => x.StudentEmail, new { @class = "form-control" })</td>
+                            <td>@Html.ValidationMessageFor(x => x.StudentEmail)</td>
+
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(x => x.StudentContactNo, "Student Contact No:")</td>
+                            <td>@Html.TextBoxFor(x => x.StudentContactNo, new { @placeholder = "018XXXXXXXX", @class = "form-control"})</td>
+                            <td>@Html.ValidationMessageFor(x => x.StudentContactNo, "", new { @style = "color:red" })</td>
+
+                        </tr>
+
+                        <tr>
+                            <td>@Html.LabelFor(x => x.Date, "Date:")</td>
+
+                            <td>@Html.TextBoxFor(x => x.Date, new { @Value = @DateTime.Now.ToShortDateString(), @readonly = "readonly", @class = "form-control" })
+                            <td>
+
+                            <td>@Html.ValidationMessageFor(x => x.Date, "", new { @style = "color:red" })</td>
+
+                        </tr>
+
+                        <tr>
+                            <td>@Html.LabelFor(x => x.StudentAdress, "Student Adress:")</td>
+                            <td>@Html.TextAreaFor(x => x.StudentAdress, new { @class = "form-control" })</td>
+                            <td>@Html.ValidationMessageFor(x => x.StudentAdress)</td>
+
+                        </tr>
+
+                        <tr>
+                            <td><label for="DepartmentId">Department:</label></td>
+                            <td>
+                                <select id="DepartmentId" name="DepartmentId" required="required" class="form-control">
+                                    <option value="">--select department--</option>
+
+                                    @foreach (Department aDepartment in ViewBag.Departments)
+                                    {
+                                        <option value="@aDepartment.Id">@aDepartment.DeptName</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                @Html.ValidationMessageFor(course => course.DepartmentId)
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <input type="hidden" id="DeptCode" name="DeptCode" readonly="readonly" />
+                            </td>
+                            <td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Register" /></td>
+                        </tr>
+                    </table>
+                </div>
+             </div>
+        }
+
+    </fieldset>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+
+                // $("#TeacherId").empty();
+
+                var json = {
+                    departmentId: deptId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDeptForRegNo", "StudentRegistration")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $('input#DeptCode').val(data);
+                    }
+                });
+            });
+
+
+
+        });
+    </script>
+</body>
+
+</html>
+
+

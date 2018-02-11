@@ -1,0 +1,63 @@
+﻿@model UniversityManagementSystemApp.Models.Department
+
+@{
+    ViewBag.Title = "Department";
+    
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="background-color: #013252;">
+    <fieldset>
+        <legend>Department Information</legend>
+        @using (Html.BeginForm())
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title"> Add Course </div>
+                    <div style="text-align: center; font-size: 20px; color: Black;">
+                        @if (ViewBag.message != null)
+                        {
+                            @ViewBag.message
+                        }
+                    </div>
+                </div>
+                <table class="form-group">
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DeptCode, "Department Code:")</td>
+                        <td>@Html.TextBoxFor(x => x.DeptCode, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.DeptCode, "", new { @style = "color:red" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DeptName, "Department Name:")</td>
+                        <td>@Html.TextBoxFor(x => x.DeptName, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.DeptName, "", new { @style = "color:red" })</td>
+                    </tr>
+
+                    <tr></tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" value="Save" />
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        }
+
+
+
+
+    </fieldset>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
+

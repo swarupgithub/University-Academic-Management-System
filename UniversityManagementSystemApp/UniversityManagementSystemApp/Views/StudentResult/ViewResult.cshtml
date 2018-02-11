@@ -1,0 +1,168 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.ViewModel.StudentCourseGradeViewModel
+
+
+
+@{
+    ViewBag.Title = "ViewResult";
+
+}
+
+<h2>Index</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color: #013252;">
+
+    <div>
+        <fieldset>
+            <legend>Save Student Result:</legend>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title"> Add Course </div>
+                    <div style="text-align: center; font-size: 20px; color: Black;">
+                        @if (ViewBag.message != null)
+                        {
+                            @ViewBag.message
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.StdRegId, "Student Reg. No:")</td>
+                        <td>@Html.DropDownListFor(x => x.StdRegId, new SelectList(ViewBag.regNos, "Id", "RegNo"), ("--Select Reg. No--"), new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.StdRegId, "", new { @style = "color:red" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Name, "Name:")</td>
+                        <td>@Html.TextBoxFor(x => x.Name, new { @readonly = "readonly", @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red" })</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Email, "Email:")</td>
+                        <td>@Html.TextBoxFor(x => x.Email, new { @readonly = "readonly", @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.Email, "", new { @style = "color:red" })</td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.Department, "Department:")</td>
+                        <td>@Html.TextBoxFor(x => x.Department, new { @readonly = "readonly", @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.Department, "", new { @style = "color:red" })</td>
+
+                    </tr>
+                </table>
+
+                <div id="Grid">
+                    <table class="table table-hover" id="myTable" border="2" style="text-align: center;">
+                        <caption>
+                            <h3>Result Information</h3>
+                        </caption>
+                        <tr>
+                            <td style="background-color: black; color: white;">
+                                Course Code
+                            </td>
+                            <td style="background-color: black; color: white;">
+                                Name
+                            </td>
+                            <td style="background-color: black; color: white;">
+                                Grade
+                            </td>
+
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+
+</fieldset>
+
+    </div>
+
+    @using (Html.BeginForm("Export", "StudentResult", FormMethod.Post))
+    {
+        <input type="hidden" name="GridHtml" />
+        <input type="submit" id="btnSubmit" value="Make Pdf" />
+    }
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#StdRegId").change(function () {
+                var regId = $("#StdRegId").val();
+                var json = {
+                    registrationId: regId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDetailsByStudentId", "EnrollCourse")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            $('Input#Name').val(value.StudentName);
+                            $('Input#Email').val(value.StudentEmail);
+                            $('Input#Department').val(value.DeptCode);
+                        });
+
+                    }
+                });
+            });
+
+
+
+            $("#StdRegId").change(function () {
+                var regId = $("#StdRegId").val();
+                $("#myRow ").empty();
+                var json = {
+                    registrationId: regId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ViewResultStudent", "StudentResult")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $.each(data, function (key, value) {
+
+                            //table.row.add([
+                            //        value.CourseCode, value.CourseName, value.SemesterName, value.TeacherName]
+                            //).draw(false);
+
+                            $("#myTable").append(
+                                '<tr id="myRow">' +
+                                    '<td>' + value.CourseCode + '</td>' +
+                                    '<td>' + value.CourseName + '</td>' +
+                                    '<td>' + value.GradeName + '</td></tr>');
+                        });
+
+                    }
+                });
+            });
+
+
+
+
+        });
+    </script>
+</body>
+
+</html>

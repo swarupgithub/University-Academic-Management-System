@@ -1,0 +1,150 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.EnrollCourse
+@{
+    ViewBag.Title = "Enroll Course";
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color: #013252;">
+
+    <div>
+        <fieldset>
+            <legend>Enroll Course:</legend>
+            @using (Html.BeginForm())
+            {
+                
+                    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title"> Enroll Course </div>
+            <div style="text-align: center; font-size: 20px; color: Black;">
+                @if (ViewBag.message != null)
+                {
+                    @ViewBag.message
+                }
+            </div>
+        </div>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(x => x.StudentRegId, "Student Reg. No:")</td>
+                    <td>@Html.DropDownListFor(x => x.StudentRegId, new SelectList(ViewBag.regNos, "Id", "RegNo"), ("--Select Reg. No--"), new {@class = "form-control"})</td>
+                    <td>@Html.ValidationMessageFor(x => x.StudentRegId, "", new {@style = "color:red"})</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(x => x.Name, "Name:")</td>
+                    <td>@Html.TextBoxFor(x => x.Name, new {@class = "form-control"})</td>
+                    <td>@Html.ValidationMessageFor(x => x.Name, "", new {@style = "color:red"})</td>
+                </tr>
+
+                <tr>
+                    <td>@Html.LabelFor(x => x.Email, "Email:")</td>
+                    <td>@Html.TextBoxFor(x => x.Email, new {@class = "form-control"})</td>
+                    <td>@Html.ValidationMessageFor(x => x.Email, "", new {@style = "color:red"})</td>
+
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(x => x.Department, "Department:")</td>
+                    <td>@Html.TextBoxFor(x => x.Department, "Department", new {@class = "form-control"})</td>
+                    <td>@Html.ValidationMessageFor(x => x.Department, "", new {@style = "color:red"})</td>
+
+                </tr>
+
+                <tr>
+                    <td><label for="CourseId">Course:</label></td>
+                    <td>
+                        <select id="CourseId" name="CourseId" class="form-control">
+                            <option value="">--Select Course--</option>
+
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.LabelFor(x => x.Date, "Date:")</td>
+                    <td>@Html.TextBoxFor(x => x.Date, new {@type = "date", @class = "form-control"})</td>
+                    <td>@Html.ValidationMessageFor(x => x.Date, "", new {@style = "color:red"})</td>
+
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Enroll"/></td>
+                </tr>
+            </table>
+            </div>
+
+            }
+        </fieldset>
+
+    </div>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+
+
+
+            $("#StudentRegId").change(function () {
+                var regId = $("#StudentRegId").val();
+                var json = {
+                    registrationId: regId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDetailsByStudentId", "EnrollCourse")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            $('Input#Name').val(value.StudentName);
+                            $('Input#Email').val(value.StudentEmail);
+                            $('Input#Department').val(value.DeptCode);
+                        });
+
+                    }
+                });
+            });
+
+            $("#StudentRegId").change(function () {
+                var regId = $("#StudentRegId").val();
+
+                $("#CourseId").empty();
+
+
+                var json = {
+                    registrationId: regId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllCourseByDept", "EnrollCourse")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $("#CourseId").append('<option value="">--Select Course--</option>');
+                        $.each(data, function (key, value) {
+                            $("#CourseId").append('<option value=' + value.CourseId + '>' + value.CourseName + '</option>');
+
+                        });
+
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

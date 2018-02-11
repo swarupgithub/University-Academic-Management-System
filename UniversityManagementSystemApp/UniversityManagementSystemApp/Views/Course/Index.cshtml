@@ -1,0 +1,84 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.Course
+@{
+    ViewBag.Title = "Add Course";
+  
+}
+
+<h2>Add Course</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color: #013252;">
+
+<div>
+    @using (Html.BeginForm())
+{
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title"> Add Course </div>
+            <div style="text-align: center; font-size: 20px; color: Black;">
+                @if (ViewBag.message != null)
+                {
+                    @ViewBag.message
+                }
+            </div>
+        </div>
+        <table class="form-group">
+            <tr>
+                <td>@Html.LabelFor(x => x.CourseCode, "Course Code:  ")</td>
+                <td>@Html.TextBoxFor(x => x.CourseCode, new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.CourseCode, "", new { @style = "color:red" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(x => x.CourseName, "Course Name:  ")</td>
+                <td>@Html.TextBoxFor(x => x.CourseName, new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.CourseName, "", new { @style = "color:red" })</td>
+
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.Credit, "Credit:  ")</td>
+                <td>@Html.TextBoxFor(x => x.Credit, new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.Credit, "", new { @style = "color:red" })</td>
+
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.Description, "Description:  ")</td>
+                <td>@Html.TextAreaFor(x => x.Description, new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.Description)</td>
+
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.DepartmentId, "Department:  ")</td>
+                <td>@Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.departments, "Id", "DeptName"), ("--Select Department--"), new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.DepartmentId, "", new { @style = "color:red" })</td>
+
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(x => x.SemesterId, "Semester:  ")</td>
+                <td>@Html.DropDownListFor(x => x.SemesterId, new SelectList(ViewBag.semester, "Id", "SemesterName"), ("--Select Semester--"), new { @class = "form-control" })</td>
+                <td>@Html.ValidationMessageFor(x => x.SemesterId, "", new { @style = "color:red" })</td>
+
+            </tr>
+
+            <tr>
+                <td><input type="submit" value="Save" /></td>
+            </tr>
+        </table>
+    </div>
+
+}
+</div>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+</body>
+</html>

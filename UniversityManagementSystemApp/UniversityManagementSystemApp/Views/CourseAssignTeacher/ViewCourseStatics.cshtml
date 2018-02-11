@@ -1,0 +1,116 @@
+﻿@using UniversityManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "ViewCourseStatics";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="background-color: #013252;">
+
+    <fieldset>
+        <legend>View Course Statics</legend>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title"> Add Course </div>
+                <div style="text-align: center; font-size: 20px; color: Black;">
+                    @if (ViewBag.message != null)
+                    {
+                        @ViewBag.message
+                    }
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td><label for="DepartmentId">Department:</label></td>
+                    <td>
+                        <select id="DepartmentId" name="DepartmentId" class="form-control">
+                            <option value="">--Select Department--</option>
+
+                            @foreach (Department aDepartment in ViewBag.Departments)
+                            {
+                                <option value="@aDepartment.Id">@aDepartment.DeptCode</option>
+                            }
+                        </select>
+                    </td>
+            </table>
+
+            <table class="table table-hover" id="myTable" border="2" style="text-align: center;">
+                <caption>
+                    <h3>Course Information</h3>
+                </caption>
+                <tr>
+                    <td style="background-color: black; color: white;">
+                        Code
+                    </td>
+                    <td style="background-color: black; color: white">
+                        Name/Title
+                    </td>
+                    <td style="background-color: black; color: white">
+                        Semester
+                    </td>
+                    <td style="background-color: black; color: white">
+                        Assign To
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    @*@section scripts
+        {*@
+    <script>
+
+        //var table = $('#myTable').DataTable();
+
+        $(document).ready(function () {
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+
+                $("#myRow ").empty();
+
+                var json = {
+                    departmentId: deptId
+
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllViewCourseStaticsByDepartmentId", "CourseAssignTeacher")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $.each(data, function (key, value) {
+
+                            //table.row.add([
+                            //        value.CourseCode, value.CourseName, value.SemesterName, value.TeacherName]
+                            //).draw(false);
+
+                            $("#myTable").append(
+                                '<tr id="myRow">' +
+                                    '<td>' + value.CourseCode + '</td>' +
+                                    '<td>' + value.CourseName + '</td>' +
+                                    '<td>' + value.SemesterName + '</td>' +
+                                    '<td>' + value.TeacherName + '</td></tr>');
+                        });
+
+                    }
+                });
+            });
+        });
+    </script>
+    @*}*@
+
+
+</body>
+</html>
+

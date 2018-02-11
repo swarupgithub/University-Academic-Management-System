@@ -1,0 +1,187 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.AllocateClassroom
+@{
+    ViewBag.Title = "Allocate Classroom";
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    <link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+</head>
+
+<body style="background-color: #013252;">
+
+    <fieldset>
+        <legend>Allocate Classroom</legend>
+        <form id="" method="POST">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title"> Allocate Classroom </div>
+                    <div style="text-align: center; font-size: 20px; color: Black;">
+                        @if (ViewBag.message != null)
+                        {
+                            @ViewBag.message
+                        }
+                    </div>
+                </div>
+                <table class="form-group">
+
+                    <tr>
+                        <td><label for="DepartmentId">Department:</label></td>
+                        <td>
+                            <select id="DepartmentId" name="DepartmentId" class="form-control" required="required">
+                                <option value="">--Select Department--</option>
+
+                                @foreach (Department aDepartment in ViewBag.Departments)
+                                {
+                                    <option value="@aDepartment.Id">@aDepartment.DeptCode</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td><label for="RoomId">Room No:</label></td>
+                        <td>
+                            <select id="RoomId" name="RoomId" class="form-control" required="required">
+                                <option value="">--Select Room--</option>
+
+                                @foreach (Room aRoom in ViewBag.Rooms)
+                                {
+                                    <option value="@aRoom.Id">@aRoom.RoomNo</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td><label for="DayId">Day:</label></td>
+                        <td>
+                            <select id="DayId" name="DayId" class="form-control" required="required">
+                                <option value="">--Select Day--</option>
+
+                                @foreach (Day aDay in ViewBag.Days)
+                                {
+                                    <option value="@aDay.Id">@aDay.DayName</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td><label for="AllocateFromDate">From:</label></td>
+                        <td class="input-group bootstrap-timepicker timepicker">
+                            <input id="AllocateFromDate" name="AllocateFromDate" type="text" class="form-control input-small" required="required">
+                            <script type="text/javascript">
+                                $('#AllocateFromDate').datetimepicker({
+                                    format: 'HH:mm A'
+                                });
+                            </script>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="AllocateToDate">To:</label></td>
+                        <td class="input-group bootstrap-timepicker timepicker">
+                            <input id="AllocateToDate" name="AllocateToDate" type="text" class="form-control input-small" required="required">
+                            <script type="text/javascript">
+                                $('#AllocateToDate').datetimepicker({
+                                    format: 'HH:mm A'
+                                });
+                            </script>
+                        </td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td><label for="CourseId">Course:</label></td>
+                        <td>
+                            <select id="CourseId" name="CourseId" class="form-control" required="required">
+                                <option value="">--Select Course--</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+
+                        <td></td>
+                        <td>
+                            <input type="submit" id="submit" name="submit" value="Allocate" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </fieldset>
+
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.timepicker.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+
+                $("#CourseId").empty();
+
+                var json = {
+                    departmentId: deptId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllCoursesByDepartmentId", "AllocateClassroom")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $("#CourseId").append('<option value="">--Select Course--</option>');
+                        $.each(data, function (key, value) {
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.CourseCode + '</option>');
+
+                        });
+
+                    }
+                });
+            });
+
+            $("#submit").click(function () {
+                var allocateFromDate = $("#AllocateFromDate").val();
+                var allocateToDate = $("#AllocateToDate").val();
+
+                if (allocateToDate < allocateFromDate) {
+                    confirm("Please Insert valid schedule");
+                    return false;
+                }
+            });
+
+        });
+
+    </script>
+
+
+
+</body>
+</html>

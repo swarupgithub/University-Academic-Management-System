@@ -1,0 +1,94 @@
+﻿@using UniversityManagementSystemApp.Models
+@model UniversityManagementSystemApp.Models.Teacher
+
+@{
+    ViewBag.Title = "Add Teacher";
+
+}
+
+<h2>Add Teacher</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="~/Content/Mystyle.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-color: #013252;">
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title"> Add Course </div>
+                    <div style="text-align: center; font-size: 20px; color: Black;">
+                        @if (ViewBag.message != null)
+                        {
+                            @ViewBag.message
+                        }
+                    </div>
+                </div>
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.TeacherName, "Teacher Name:")</td>
+                        <td>@Html.TextBoxFor(x => x.TeacherName, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.TeacherName, "", new { @style = "color:red" })</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.TeacherAddress, "Teacher Address:")</td>
+                        <td>@Html.TextAreaFor(x => x.TeacherAddress, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.TeacherAddress)</td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.TeacherEmail, "Teacher Email:")</td>
+                        <td>@Html.TextBoxFor(x => x.TeacherEmail, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.TeacherEmail, "", new { @style = "color:red" })</td>
+
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.TeacherContactNo, "Teacher Contact No:")</td>
+                        <td>@Html.TextBoxFor(x => x.TeacherContactNo, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.TeacherContactNo, "", new { @style = "color:red" })</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>@Html.LabelFor(x => x.DesignationId, "Designation:")</td>
+                        <td>@Html.DropDownListFor(x => x.DesignationId, new SelectList(ViewBag.designations, "Id", "DesignationName"), ("--Select Designation--"), new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.DesignationId, "", new { @style = "color:red" })</td>
+
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(x => x.DepartmentId, "Department:")</td>
+                        <td>@Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.departments, "Id", "DeptName"), ("--Select Department--"), new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.DepartmentId, "", new { @style = "color:red" })</td>
+
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(x => x.CreditToTaken, "Credit To Taken:")</td>
+                        <td>@Html.TextBoxFor(x => x.CreditToTaken, new { @class = "form-control" })</td>
+                        <td>@Html.ValidationMessageFor(x => x.CreditToTaken, "", new { @style = "color:red" })</td>
+                    </tr>
+
+
+                    <tr>
+                        <td><input type="submit" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+</body>
+</html>
